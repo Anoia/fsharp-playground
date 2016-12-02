@@ -25,32 +25,28 @@ module VigenereCipher =
 
     let FindIndex char = List.findIndex (fun c -> c = char) characters
 
-    let Rotate (passchar, textchar) =
+    let RotateOp op (passchar, textchar) =
         let textindex = FindIndex textchar
         let passindex = FindIndex passchar
-        let newIndex = (textindex + passindex + characters.Length) % characters.Length
-        characters.[newIndex]
+        let newIndex = ((op textindex passindex) + characters.Length) % characters.Length
+        characters.[newIndex].ToString()
 
-    let RotateBack (passchar, textchar) =
-        let textindex = FindIndex textchar
-        let passindex = FindIndex passchar
-        let newIndex = (textindex - passindex + characters.Length) % characters.Length
-        characters.[newIndex]
+    let Rotate = RotateOp (+)
+
+    let RotateBack = RotateOp (-)
 
     let BuildPassPhrase password length =
         let passLength = String.length password
         [0..length]
         |> List.map (fun i -> password.[i % passLength])
         |> String.Concat
-
-    let Encrypt pass plaintext = 
+    
+    let DoVigenere rotation pass plaintext =
         let passPhrase = BuildPassPhrase pass <| String.length plaintext
         Seq.zip passPhrase plaintext
-        |> Seq.map Rotate
+        |> Seq.map rotation
         |> String.Concat
 
-    let Decrypt pass cryptotext =
-        let passPhrase = BuildPassPhrase pass <| String.length cryptotext
-        Seq.zip passPhrase cryptotext
-        |> Seq.map RotateBack
-        |> String.Concat
+    let Encrypt pass plaintext = DoVigenere Rotate pass plaintext
+
+    let Decrypt pass cryptotext = DoVigenere RotateBack pass cryptotext
