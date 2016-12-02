@@ -8,7 +8,7 @@ module Test =
     open BasicFunctions
 
     let print text = 
-       printfn "%s" text
+       printfn "%s"text
        text
 
     [<EntryPoint>]
@@ -22,14 +22,13 @@ module Test =
 //            |> printf "%s"
 
         
-        let number = Console.ReadLine()
-                     |> Int32.Parse
+        let pass = Console.ReadLine()
         
 
         Console.ReadLine()
-            |> SimpleEncryption.Encrypt number
+            |> VigenereCipher.Encrypt pass
             |> print
-            |> SimpleEncryption.Decrypt number
+            |> VigenereCipher.Decrypt pass
             |> print
             |> ignore
 
