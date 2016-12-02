@@ -7,14 +7,31 @@ module Test =
     open Integers
     open BasicFunctions
 
+    let print text = 
+       printfn "%s" text
+       text
+
     [<EntryPoint>]
     let main argv = 
         //printfn "%A" argv
 
-        Console.ReadLine() 
-            |> Int32.Parse 
-            |> FizzBuzz.DoTheFizzBuzz
-            |> printf "%s"
+//        Call FizzBuzz
+//        Console.ReadLine() 
+//            |> Int32.Parse 
+//            |> FizzBuzz.DoTheFizzBuzz
+//            |> printf "%s"
+
+        
+        let number = Console.ReadLine()
+                     |> Int32.Parse
+        
+
+        Console.ReadLine()
+            |> SimpleEncryption.Encrypt number
+            |> print
+            |> SimpleEncryption.Decrypt number
+            |> print
+            |> ignore
 
         Console.ReadLine() |> ignore
         0 // return an integer exit code 
