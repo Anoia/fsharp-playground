@@ -48,13 +48,13 @@ module markov_bot =
         | '!' -> true
         | _ -> false
 
-    let generateWords (sample:string) (firstWord:string) =
+    let generateWords sample firstWord =
         let rand = System.Random()
         let selectNextWord (nextWords:string[]) =
             nextWords.[rand.Next(nextWords.Length)]
         let bigrams = bigramify sample
-        let rec appendWord (sentence:string) (lastWord:string) =             
-            match (isEndOfSentence lastWord) with
+        let rec appendWord sentence lastWord =             
+            match isEndOfSentence lastWord with
             | true -> sentence
             | false -> 
                 let possibleNextWords = nextWords bigrams lastWord
