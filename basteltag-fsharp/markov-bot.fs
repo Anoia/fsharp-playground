@@ -21,15 +21,15 @@ module markov_bot =
         They'll learn much more than I'll ever know
         And I think to myself
         What a wonderful world
-
+        
         Yes, I think to myself
         What a wonderful world"""
     
     let bigramify (text:string) =    
-        let words = text.Split ' ' 
-        text.Split ' '
-        |> Seq.filter (fun s -> s <> "")
-        |> Seq.map (fun s -> s.Trim())
+        text.Split (' ', '\n')
+        |> Seq.map (fun s -> s.Trim('"'))
+        |> Seq.map (fun s -> s.Trim())        
+        |> Seq.filter (fun s -> s <> "")    
         |> Seq.windowed 2
         |> Seq.toArray
 
@@ -40,19 +40,29 @@ module markov_bot =
         |> Seq.toArray
         |> Array.map (fun pair -> pair.[1])
 
-
+    let isEndOfSentence (word:string) = 
+        let lastChar = word.[word.Length - 1]
+        match lastChar with
+        | '.'  
+        | '?'
+        | '!' -> true
+        | _ -> false
 
     let generateWords (sample:string) (firstWord:string) =
         let rand = System.Random()
         let selectNextWord (nextWords:string[]) =
             nextWords.[rand.Next(nextWords.Length)]
         let bigrams = bigramify sample
-        let rec appendWord (sentence:string) (lastWord:string) = 
-            let possibleNextWords = nextWords bigrams lastWord
-            match possibleNextWords.Length with
-            | 0 -> sentence
-            | _ -> let nextWord = selectNextWord possibleNextWords
-                   appendWord (sentence + " " + nextWord) nextWord
+        let rec appendWord (sentence:string) (lastWord:string) =             
+            match (isEndOfSentence lastWord) with
+            | true -> sentence
+            | false -> 
+                let possibleNextWords = nextWords bigrams lastWord
+                match possibleNextWords.Length with
+                | 0 -> sentence
+                | _ -> let nextWord = selectNextWord possibleNextWords
+                       appendWord (sentence + " " + nextWord) nextWord
+
         appendWord firstWord firstWord 
 
 

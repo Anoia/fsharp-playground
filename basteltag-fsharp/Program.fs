@@ -6,6 +6,7 @@ module Test =
     open System
     open Integers
     open BasicFunctions
+    open System.IO
 
     let print text = 
        printfn "%s"text
@@ -14,23 +15,11 @@ module Test =
     [<EntryPoint>]
     let main argv = 
         //printfn "%A" argv
+        let text = File.ReadAllText "Tarzan.txt"
 
-//        Call FizzBuzz
-//        Console.ReadLine() 
-//            |> Int32.Parse 
-//            |> FizzBuzz.DoTheFizzBuzz
-//            |> printf "%s"
+        while Console.ReadKey().KeyChar <> 'q' do
+            let result = markov_bot.generateWords text "The"
+            Console.WriteLine result
 
-        
-        let pass = Console.ReadLine()
-        
-
-        Console.ReadLine()
-            |> VigenereCipher.Encrypt pass
-            |> print
-            |> VigenereCipher.Decrypt pass
-            |> print
-            |> ignore
-
-        Console.ReadLine() |> ignore
+        //Console.ReadLine() |> ignore
         0 // return an integer exit code 
